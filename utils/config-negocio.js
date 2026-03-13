@@ -124,7 +124,7 @@ window.getNombreNegocio = async function() {
  */
 window.getTelefonoDuenno = async function() {
     const config = await window.cargarConfiguracionNegocio();
-    return config?.telefono || '54066204';
+    return config?.telefono || '58485216';
 };
 
 /**
@@ -181,6 +181,14 @@ window.getMensajeConfirmacion = async function() {
 window.getNtfyTopic = async function() {
     const config = await window.cargarConfiguracionNegocio();
     return config?.ntfy_topic || 'negocio_5da2d9c9';
+};
+
+/**
+ * 🔥 Obtiene si el negocio requiere anticipo
+ */
+window.getRequiereAnticipo = async function() {
+    const config = await window.cargarConfiguracionNegocio();
+    return config?.requiere_anticipo || false;
 };
 
 /**
