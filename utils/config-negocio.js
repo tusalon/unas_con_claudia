@@ -180,7 +180,7 @@ window.getMensajeConfirmacion = async function() {
  */
 window.getNtfyTopic = async function() {
     const config = await window.cargarConfiguracionNegocio();
-    return config?.ntfy_topic || 'negocio_5da2d9c9';
+    return config?.ntfy_topic || 'unas-claudia';
 };
 
 /**
