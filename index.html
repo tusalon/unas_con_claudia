@@ -8,11 +8,11 @@
     
     <!-- PWA Meta Tags con rutas RELATIVAS -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#9333ea">
+    <meta name="theme-color" content="#ec4899">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="GordisNails">
+    <meta name="apple-mobile-web-app-title" content="UñasClaudia">
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
     <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
     
@@ -20,7 +20,7 @@
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/gordis-nails/sw.js')
+            navigator.serviceWorker.register('/unas_con_claudia/sw.js')
                 .then(registration => {
                     console.log('✅ Service Worker registrado:', registration.scope);
                 })
@@ -117,7 +117,7 @@ window.addEventListener('load', () => {
         btn.style.bottom = '20px';
         btn.style.right = '20px';
         btn.style.zIndex = '9999';
-        btn.style.background = '#9333ea';
+        btn.style.background = '#ec4899';
         btn.style.color = 'white';
         btn.style.padding = '15px 30px';
         btn.style.borderRadius = '50px';
