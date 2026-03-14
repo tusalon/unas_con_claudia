@@ -1,7 +1,7 @@
-// admin-app.js - Panel de administración (VERSIÓN CORREGIDA CON WHATSAPP GLOBAL)
-// CLIENTE: GordisNailsbySandra
+// admin-app.js - Panel de administración (VERSIÓN GENÉRICA)
+// SIN NINGÚN NOMBRE DE CLIENTE HARCODEADO
 
-console.log('🚀 ADMIN-APP.JS - GordisNailsbySandra');
+console.log('🚀 ADMIN-APP.JS - Panel de administración');
 
 window.addEventListener('error', function(e) {
     console.error('❌ Error detectado, posible versión antigua:', e.message);
@@ -45,7 +45,7 @@ function getNegocioId() {
 }
 
 // ============================================
-// FUNCIONES DE SUPABASE (CORREGIDAS CON FILTRO)
+// FUNCIONES DE SUPABASE
 // ============================================
 
 async function getAllBookings() {
@@ -792,16 +792,8 @@ function AdminApp() {
         });
     }, [userRole, userNivel, profesional]);
 
-  // admin-app.js - Panel de administración (VERSIÓN CORREGIDA CON WHATSAPP GLOBAL)
-// + MEJORA EN confirmarPago PARA USAR MENSAJE PERSONALIZADO SI CORRESPONDE
-// CLIENTE: GordisNailsbySandra
-
-console.log('🚀 ADMIN-APP.JS - GordisNailsbySandra');
-
-// ... (todo el código existente se mantiene igual hasta la función confirmarPago)
-
-// ============================================
-// FUNCIÓN PARA CONFIRMAR PAGO (MEJORADA)
+    // ============================================
+// FUNCIÓN PARA CONFIRMAR PAGO (CORREGIDA)
 // ============================================
 const confirmarPago = async (id, bookingData) => {
     if (!confirm(`¿Confirmar que se recibió el pago de ${bookingData.cliente_nombre}? El turno pasará a "Reservado".`)) return;
@@ -829,7 +821,7 @@ const confirmarPago = async (id, bookingData) => {
         
         console.log('📤 Enviando confirmación de turno al cliente...');
         
-        // 🔥 OBTENER CONFIGURACIÓN DEL NEGOCIO
+        // Obtener configuración del negocio
         const configNegocio = await window.cargarConfiguracionNegocio();
         
         // Formatear fecha con día de la semana
@@ -845,10 +837,14 @@ const confirmarPago = async (id, bookingData) => {
         // Obtener nombre del negocio
         const nombreNegocio = configNegocio?.nombre || await window.getNombreNegocio ? 
             await window.getNombreNegocio() : 
-            'GordisNailsbySandra';
+            'Mi Negocio';
         
-               // 🔥 SIEMPRE USAR EL MENSAJE BONITO (COMO ERA ANTES)
-        const mensajeCliente = 
+        // 🔥 USAR LA NUEVA FUNCIÓN CENTRALIZADA
+        if (window.enviarConfirmacionPago) {
+            await window.enviarConfirmacionPago(bookingData, configNegocio);
+        } else {
+            // Fallback por si no existe la función
+            const mensajeCliente = 
 `💅 *${nombreNegocio} - Turno Confirmado* 🎉
 
 Hola *${bookingData.cliente_nombre}*, ¡tu turno ha sido CONFIRMADO!
@@ -863,21 +859,19 @@ Hola *${bookingData.cliente_nombre}*, ¡tu turno ha sido CONFIRMADO!
 Te esperamos 💖
 Cualquier cambio, podés cancelarlo desde la app con hasta 1 hora de anticipación.`;
 
-        window.enviarWhatsApp(bookingData.cliente_whatsapp, mensajeCliente);
+            window.enviarWhatsApp(bookingData.cliente_whatsapp, mensajeCliente);
+        }
         
         alert('✅ Pago confirmado. Turno reservado y cliente notificado.');
         fetchBookings(); // Recargar reservas
         
-    } catch (error) {
+    } catch (error) {  // ← ¡ESTE CATCH ES EL QUE FALTABA!
         console.error('Error confirmando pago:', error);
         alert('❌ Error al confirmar el pago');
     }
 };
-
-// ... (resto del código de admin-app.js se mantiene igual)
-
     // ============================================
-    // HANDLE CANCEL CORREGIDO - USA notificarCancelacion
+    // HANDLE CANCEL
     // ============================================
     const handleCancel = async (id, bookingData) => {
         if (!confirm(`¿Cancelar reserva de ${bookingData.cliente_nombre}?`)) return;
@@ -889,10 +883,6 @@ Cualquier cambio, podés cancelarlo desde la app con hasta 1 hora de anticipaci�
             // Marcar que fue cancelado por admin
             bookingData.cancelado_por = 'admin';
             
-            // ÚNICA LLAMADA - notificarCancelacion ya maneja:
-            // - WhatsApp al cliente
-            // - WhatsApp a la dueña
-            // - ntfy push
             if (window.notificarCancelacion) {
                 await window.notificarCancelacion(bookingData);
             }
@@ -995,7 +985,7 @@ Cualquier cambio, podés cancelarlo desde la app con hasta 1 hora de anticipaci�
         <div className="min-h-screen bg-pink-50 p-3 sm:p-6">
             <div className="max-w-6xl mx-auto space-y-4">
                 
-                {/* ===== HEADER CON ESTILO FEMENINO ===== */}
+                {/* HEADER */}
                 <div className="bg-white p-4 rounded-xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-l-4 border-pink-500">
                     {/* Título y logo */}
                     <div className="flex items-center gap-3">
@@ -1264,7 +1254,7 @@ Cualquier cambio, podés cancelarlo desde la app con hasta 1 hora de anticipaci�
                             </div>
                         )}
 
-                        {/* SOLO CLIENTES REGISTRADOS - SIN SOLICITUDES PENDIENTES */}
+                        {/* CLIENTES REGISTRADOS */}
                         <div className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-green-500">
                             <button
                                 onClick={() => {
