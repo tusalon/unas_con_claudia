@@ -180,11 +180,11 @@ window.getMensajeConfirmacion = async function() {
  */
 window.getNtfyTopic = async function() {
     const config = await window.cargarConfiguracionNegocio();
-    return config?.ntfy_topic || 'unas-claudia';
+    return config?.ntfy_topic || 'unas_con_claudia';
 };
 
 /**
- * 🔥 Obtiene si el negocio requiere anticipo
+ * 🔥 NUEVA FUNCIÓN: Obtiene si el negocio requiere anticipo
  */
 window.getRequiereAnticipo = async function() {
     const config = await window.cargarConfiguracionNegocio();
