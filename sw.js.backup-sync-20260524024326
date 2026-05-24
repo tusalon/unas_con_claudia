@@ -1,6 +1,6 @@
 // sw.js - Service Worker para Uñas de Claudia
 
-const CACHE_NAME = 'unas_con_claudia-v29';
+const CACHE_NAME = 'unas_con_claudia-v25';
 const urlsToCache = [
   '/unas_con_claudia/',
   '/unas_con_claudia/index.html',
