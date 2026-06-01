@@ -1,6 +1,6 @@
 // sw.js - Service Worker para Uñas de Claudia
 
-const CACHE_NAME = 'unas_con_claudia-v29';
+const CACHE_NAME = 'unas_con_claudia-v48';
 const urlsToCache = [
   '/unas_con_claudia/',
   '/unas_con_claudia/index.html',
@@ -17,7 +17,16 @@ const urlsToCache = [
   '/unas_con_claudia/icons/icon-152x152.png',
   '/unas_con_claudia/icons/icon-192x192.png',
   '/unas_con_claudia/icons/icon-384x384.png',
-  '/unas_con_claudia/icons/icon-512x512.png'
+  '/unas_con_claudia/icons/icon-512x512.png',
+  '/unas_con_claudia/vendor/react.production.min.js',
+  '/unas_con_claudia/vendor/react-dom.production.min.js',
+  '/unas_con_claudia/vendor/babel.min.js',
+  '/unas_con_claudia/vendor/bcrypt.min.js',
+  '/unas_con_claudia/vendor/tailwind-browser.js',
+  '/unas_con_claudia/vendor/lucide/lucide.css',
+  '/unas_con_claudia/vendor/lucide/lucide.woff2',
+  '/unas_con_claudia/utils/push-config.js',
+  '/unas_con_claudia/utils/push-notifications.js'
 ];
 
 // ============================================
@@ -137,6 +146,51 @@ self.addEventListener('message', event => {
       });
     });
   }
+});
+
+// ============================================
+// WEB PUSH OPCIONAL
+// ============================================
+self.addEventListener('push', event => {
+  let payload = {};
+
+  try {
+    payload = event.data ? event.data.json() : {};
+  } catch (error) {
+    payload = {
+      title: 'RservasRoma',
+      body: event.data ? event.data.text() : 'Tienes una nueva notificación'
+    };
+  }
+
+  const title = payload.title || 'RservasRoma';
+  const options = {
+    body: payload.body || 'Tienes una nueva notificación',
+    icon: '/unas_con_claudia/icons/icon-192x192.png',
+    badge: '/unas_con_claudia/icons/icon-96x96.png',
+    tag: payload.tag || 'rservasroma',
+    data: {
+      url: payload.url || '/unas_con_claudia/admin.html',
+      ...(payload.data || {})
+    }
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+
+  const targetUrl = event.notification?.data?.url || '/unas_con_claudia/admin.html';
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
+      for (const client of clientList) {
+        if (client.url.includes(targetUrl) && 'focus' in client) return client.focus();
+      }
+      if (clients.openWindow) return clients.openWindow(targetUrl);
+      return null;
+    })
+  );
 });
 
 console.log('✅ Service Worker configurado para Uñas de Claudia');

@@ -145,11 +145,9 @@ window.enviarWhatsApp = function(telefono, mensaje) {
     try {
         console.log('📤 enviarWhatsApp llamado a:', telefono);
 
-        const telefonoLimpio = telefono.toString().replace(/\D/g, '');
-        let numeroCompleto = telefonoLimpio;
-        if (!numeroCompleto.startsWith('53')) {
-            numeroCompleto = `53${telefonoLimpio}`;
-        }
+        const numeroCompleto = window.normalizarTelefonoInternacional
+            ? window.normalizarTelefonoInternacional(telefono)
+            : telefono.toString().replace(/\D/g, '');
 
         const mensajeCodificado = encodeURIComponent(mensaje);
         const url = `https://api.whatsapp.com/send?phone=${numeroCompleto}&text=${mensajeCodificado}`;
@@ -196,6 +194,15 @@ window.enviarNotificacionPush = async function(titulo, mensaje, etiquetas = 'bel
 
         if (response.ok) {
             console.log('✅ Push enviado correctamente');
+            if (window.enviarWebPushRservasRoma) {
+                window.enviarWebPushRservasRoma({
+                    title: safeTitle,
+                    body: mensaje,
+                    role: 'admin',
+                    tags: safeTags,
+                    data: { priority: safePriority }
+                }).catch(error => console.warn('Web Push opcional no enviado:', error));
+            }
             return true;
         }
 
@@ -256,10 +263,10 @@ ${mensajePagoConfig || `
    Alias: ${configNegocio.alias || 'alias.no.configurado'}
 
 📱 *Enviar comprobante a este WhatsApp:*
-   +53 ${configNegocio.telefono || '00000000'}
+   ${window.formatearTelefono ? window.formatearTelefono(configNegocio.telefono, configNegocio.codigo_pais) : `+${configNegocio.telefono || '00000000'}`}
 
 ⏳ *Importante:*
-El turno se cancelará automáticamente si no se confirma el pago dentro de las ${configNegocio.tiempo_vencimiento || 2} horas.`}
+El turno se liberará automáticamente si no se confirma el pago dentro de las ${configNegocio.tiempo_vencimiento || 2} horas.`}
 ${lineaCalendario}
 Cuando confirmemos tu pago, tu turno quedará reservado.
 
@@ -489,10 +496,10 @@ ${mensajePagoConfig || `
    Alias: ${configNegocio.alias || 'alias.no.configurado'}
 
 📱 *Enviar comprobante a este WhatsApp:*
-   +53 ${configNegocio.telefono || '00000000'}
+   ${window.formatearTelefono ? window.formatearTelefono(configNegocio.telefono, configNegocio.codigo_pais) : `+${configNegocio.telefono || '00000000'}`}
 
 ⏳ *Importante:*
-El turno se cancelará automáticamente si no se confirma el pago dentro de las ${configNegocio.tiempo_vencimiento || 2} horas.`}
+El turno se liberará automáticamente si no se confirma el pago dentro de las ${configNegocio.tiempo_vencimiento || 2} horas.`}
 ${lineaCalendario}
 
 ¡Gracias por elegirnos! 💖`;

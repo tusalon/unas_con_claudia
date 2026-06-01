@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Uñas de Claudia</string>
+    <string name="title_activity_main">Uñas de Claudia</string>
+    <string name="package_name">com.tusalon.unasdeclaudia</string>
+    <string name="custom_url_scheme">com.tusalon.unasdeclaudia</string>
+</resources>
